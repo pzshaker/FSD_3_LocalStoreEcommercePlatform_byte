@@ -28,7 +28,7 @@ Phase 2 endpoints below are implemented. Errors use `{ "error": { "code": "STABL
 | DELETE | /api/cart/items/:productId | Remove a product from the cart. |
 | POST | /api/orders | Validate pickup, customer details, and stock; create an order. |
 | GET | /api/orders/:orderNumber | Read the confirmation only from the browser session that placed it. |
-| POST | /api/orders/:orderId/cancel | Cancel an eligible order from its browser session. |
+| POST | /api/orders/:orderNumber/cancel | Cancel an eligible order from its browser session. |
 
 Order creation returns `{ order, timezone, cancellationCutoff }` for a new order and `{ order }` on an idempotent replay. Confirmation returns `{ order, timezone, cancellationCutoff }`; cancellation returns `{ order, stockRestored }`.
 
