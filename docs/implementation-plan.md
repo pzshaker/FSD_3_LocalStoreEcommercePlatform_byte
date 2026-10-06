@@ -2,7 +2,7 @@
 
 Build the complete bakery ordering app in five phases, backend first. Group related API, screen, state, and motion work together so each phase produces a working result. Use this document as the implementation checklist; keep detailed behavior in the linked source documents.
 
-**Current state:** Phases 1–3 are complete. Phase 2 delivers catalog, session cart, pickup availability, transactional and idempotent checkout/cancellation, owner product/order APIs, and authorized Vercel Blob upload tokens. Phase 3 delivers the customer catalog-to-cancellation journey with error recovery, plus accessible customer and owner UI. All 11 isolated API/security/transaction checks and the production build pass; browser checks covered customer checkout/cancellation and the owner catalog/order flows against an isolated in-memory replica set. The owner UI was built into the shared app shell and receives its phase-specific final review in Phase 4. Atlas connectivity and local owner provisioning were verified during Phase 1. Dummy owner credentials remain in ignored `.env` and must be replaced before production. Desktop is the current priority; mobile design/review remains deferred.
+**Current state:** Phases 1–4 are implemented and reviewed; Phase 5 deployment is in progress. Phase 2 delivers catalog, session cart, pickup availability, transactional and idempotent checkout/cancellation, owner product/order APIs, and authorized Vercel Blob upload tokens. Phase 3 delivers the customer catalog-to-cancellation journey with error recovery and accessible desktop UI. Phase 4 delivers protected owner access, order fulfillment, product editing/archive/restock, and upload UI with configuration-error recovery. All 11 isolated API/security/transaction checks and the production build pass. Browser checks covered customer checkout/cancellation and owner catalog/order flows on an isolated replica set. A successful photo upload and public production flows still require production Blob, database, origin, owner, and deployment configuration. Atlas connectivity and local owner provisioning were verified during Phase 1. Dummy owner credentials remain in ignored `.env` and must be replaced before production. Desktop is the current priority; mobile design/review remains deferred.
 
 ## Phase 1 — Foundation and secure access
 
@@ -40,15 +40,15 @@ Build the complete bakery ordering app in five phases, backend first. Group rela
 
 ## Phase 4 — Complete owner experience
 
-- [ ] Build sign-in/sign-out, protected navigation, and expired-session recovery.
-- [ ] Build the pickup-time order queue, empty and archived views, order details, and status actions.
-- [ ] Build product management and create/edit forms with photo upload progress and validation.
-- [ ] Build archive confirmation and restock with accurate resulting stock and clear save/error feedback.
-- [ ] Complete owner loading, empty, not-found, and failure states; apply restrained motion and accessible controls.
+- [x] Build sign-in/sign-out, protected navigation, and expired-session recovery.
+- [x] Build the pickup-time order queue, empty and archived views, order details, and status actions.
+- [x] Build product management and create/edit forms with photo upload progress and validation.
+- [x] Build archive confirmation and restock with accurate resulting stock and clear save/error feedback.
+- [x] Complete owner loading, empty, not-found, and failure states; apply restrained motion and accessible controls.
 
 **Screens:** O1–O8; Stitch design patches 4–5.
 
-**Done when:** the owner can manage catalog photos/stock and fulfill a customer order entirely through the interface. Cancelled orders cannot advance, and product edits leave historical order details intact.
+**Done when:** the owner can manage catalog photos/stock and fulfill a customer order entirely through the interface. Cancelled orders cannot advance, and product edits leave historical order details intact. **Verified:** protected owner navigation/session expiry, create/edit/archive/restock, order queue/detail/status actions, sample snapshot preservation, empty/archived states, and cross-surface order integration were browser checked. All interactive targets meet 44px and desktop pages have no horizontal overflow. Photo input validation and missing-Blob recovery were verified; a successful upload awaits production storage configuration.
 
 ## Phase 5 — Connect, polish, and launch
 
@@ -77,5 +77,5 @@ Build the complete bakery ordering app in five phases, backend first. Group rela
 | [Selected direction](../design-variations/DESIGN.md) and [motion guide](../ANIMATIONS.md) | Visual styling and interaction motion. |
 | [Project instructions](../AGENTS.md) | Rules for future implementation work. |
 
-**Next implementation task:** Phase 4 — final owner-flow review, fixes, and verification. Setup commands are in the root `README.md`. Replace the dummy owner login and configure production storage before launch.
+**Next implementation task:** Phase 5 — deployment preparation and desktop production verification. Setup commands are in the root `README.md`. Replace the dummy owner login and configure production storage before launch.
 

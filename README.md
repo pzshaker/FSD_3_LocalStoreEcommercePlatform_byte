@@ -6,7 +6,7 @@ React + Vite frontend, Express API, MongoDB, and a Vercel deployment configurati
 
 AVIP 2026 Full Stack Development, Task 3 — Local Store E-commerce Platform. The local folder name "Project 2" identifies the second project being worked on, not BYTE's task number. The public repository is [FSD_3_LocalStoreEcommercePlatform_byte](https://github.com/pzshaker/FSD_3_LocalStoreEcommercePlatform_byte).
 
-BYTE requires product listing/detail screens, product and cart APIs, a session-persisted cart, product image/price/description/stock display, validation and cart feedback, plus a README covering available APIs and sample data and a live demo or screenshots. Phases 1–3 are complete: the APIs and the full desktop customer ordering/cancellation UI are implemented and verified. Owner screens are implemented in the shared app shell and are receiving their dedicated Phase 4 review. Public demo deployment remains in progress. See [available APIs](docs/backend-api.md) and [the implementation roadmap](docs/implementation-plan.md).
+BYTE requires product listing/detail screens, product and cart APIs, a session-persisted cart, product image/price/description/stock display, validation and cart feedback, plus a README covering available APIs and sample data and a live demo or screenshots. Phases 1–3 are complete: the APIs and the full desktop customer ordering/cancellation UI are implemented and verified. Owner screens and desktop flows are implemented and browser reviewed. Photo upload recovery is verified; a successful upload requires the owner to configure the production Vercel Blob token. Public demo deployment remains in progress. See [available APIs](docs/backend-api.md) and [the implementation roadmap](docs/implementation-plan.md).
 
 ## Local setup
 
