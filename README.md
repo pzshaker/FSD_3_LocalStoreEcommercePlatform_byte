@@ -6,7 +6,7 @@ React + Vite frontend, Express API, MongoDB, and a Vercel deployment configurati
 
 AVIP 2026 Full Stack Development, Task 3 — Local Store E-commerce Platform. The local folder name "Project 2" identifies the second project being worked on, not BYTE's task number. The public repository is [FSD_3_LocalStoreEcommercePlatform_byte](https://github.com/pzshaker/FSD_3_LocalStoreEcommercePlatform_byte).
 
-BYTE requires product listing/detail screens, product and cart APIs, a session-persisted cart, product image/price/description/stock display, validation and cart feedback, plus a README covering available APIs and sample data and a live demo or screenshots. Phases 1–3 are complete: the APIs and the full desktop customer ordering/cancellation UI are implemented and verified. Owner screens and desktop flows are implemented and browser reviewed. Photo upload recovery is verified; a successful upload requires the owner to configure the production Vercel Blob token. Public demo deployment remains in progress. See [available APIs](docs/backend-api.md) and [the implementation roadmap](docs/implementation-plan.md).
+BYTE requires product listing/detail screens, product and cart APIs, a session-persisted cart, product image/price/description/stock display, validation and cart feedback, plus a README covering available APIs and sample data and a live demo or screenshots. Phases 1–4 are complete: the APIs and the full desktop customer ordering/cancellation UI are implemented and verified. Owner screens and desktop flows are implemented and browser reviewed. Photo upload recovery is verified; a successful upload requires the owner to configure the production Vercel Blob token. Public demo deployment remains in progress. See [available APIs](docs/backend-api.md) and [the implementation roadmap](docs/implementation-plan.md).
 
 ## Local setup
 
@@ -22,6 +22,21 @@ The API runs on port 3001; Vite proxies `/api` to it. If you change the API port
 
 `npm run seed:sample` optionally inserts four explicitly labeled sample products into an empty catalog. Sample photos are illustrative generated images, and sample prices are integer minor units with no confirmed currency. The seed never claims these are real products. Checkout uses MongoDB transactions, so the database must run as a replica set.
 
+## Available APIs and sample data
+
+All routes are documented with request shapes and authorization rules in [docs/backend-api.md](docs/backend-api.md). The main groups are:
+
+| API group | Available routes |
+| --- | --- |
+| Customer catalog and pickup | `GET /api/products`, `GET /api/products/:id`, `GET /api/pickup-slots` |
+| Session cart and orders | `GET /api/cart`, `POST/PATCH/DELETE /api/cart/items`, `POST /api/orders`, `GET /api/orders/:number`, `POST /api/orders/:number/cancel` |
+| Owner access | `POST/GET/DELETE /api/owner/session` |
+| Owner products and orders | `GET/POST /api/owner/products`, `GET/PATCH /api/owner/products/:id`, `POST .../:id/archive`, `POST .../:id/restock`, `POST /api/owner/product-image-upload`, `GET /api/owner/orders`, `GET /api/owner/orders/:id`, `PATCH /api/owner/orders/:id/status` |
+| Health | `GET /api/health` |
+
+`npm run seed:sample` creates one clearly labeled product in each fixed category: Bread, Pastries, Cakes, and Drinks. Each has a placeholder description, price of 100 sample minor units (currency unconfirmed), and stock of 10. Sample photos are illustrative generated category images; they are not verified product photography. The seed only runs against an empty catalog.
+
+**Public demo:** project `bakery-ordering-app` is linked; production configuration and deployment are pending. No live URL is available yet. The demo will retain clearly labeled sample products until the bakery confirms real catalog details.
 ## Checks
 
 - `npm test`: Node's built-in tests with an isolated ephemeral MongoDB server. The first run downloads a MongoDB binary; no Atlas credentials or live data are used.
@@ -36,6 +51,6 @@ Owner sessions expire after eight hours and are revocable. Customer cookies are 
 
 ## Vercel
 
-Import this repository as a Vite project. `vercel.json` routes `/api/*` to the Express export in `api/index.js` and frontend routes to the SPA. Configure private `MONGODB_URI`, `MONGODB_DB`, `APP_ORIGIN` (the exact HTTPS deployment origin), `BLOB_READ_WRITE_TOKEN`, and `NODE_ENV=production`. Provision the owner through the private CLI, never a public registration endpoint. No deployment has been performed; deployed routing and cookies must be verified before launch.
+`vercel.json` configures the Vite build, routes `/api/*` to the Express export in `api/index.js`, and routes frontend paths to the SPA. The `bakery-ordering-app` project is linked to this checkout. Configure private production variables `MONGODB_URI` (replica-set URI), `MONGODB_DB`, `APP_ORIGIN` (exact HTTPS origin), `BLOB_READ_WRITE_TOKEN`, `BAKERY_TIMEZONE`, and `NODE_ENV=production`. Provision the owner through the private CLI against the production database; there is no public registration endpoint. The project is linked, but deployment has not been performed. Preview and production customer/owner flows, API routing, secure cookies, and image upload remain to be verified.
 
-`npm start` serves the API alone. Use `npm run dev` for the local full app. Product image storage and Blob credentials will be introduced with authorized uploads in Phase 2.
+`npm start` serves the API alone. Use `npm run dev` for the local full app. Product image uploads use authorized Vercel Blob client tokens; production storage credentials remain to be configured.

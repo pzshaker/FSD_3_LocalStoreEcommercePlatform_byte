@@ -1,6 +1,6 @@
-# Backend API draft
+# Backend API
 
-Route names and request/response shapes below are proposed for planning. They are not yet a locked contract. All routes use JSON unless they upload an image.
+The routes and request/response shapes below describe the implemented API. All routes use JSON unless they upload an image.
 
 ## Phase 1 implemented endpoints
 
@@ -30,7 +30,7 @@ Phase 2 endpoints below are implemented. Errors use `{ "error": { "code": "STABL
 | GET | /api/orders/:orderNumber | Read the confirmation only from the browser session that placed it. |
 | POST | /api/orders/:orderId/cancel | Cancel an eligible order from its browser session. |
 
-The order confirmation response should include the order number, pickup time, item/price summary, total due at pickup, and cancellation cutoff.
+Order creation returns `{ order, timezone, cancellationCutoff }` for a new order and `{ order }` on an idempotent replay. Confirmation returns `{ order, timezone, cancellationCutoff }`; cancellation returns `{ order, stockRestored }`.
 
 ## Owner routes
 
@@ -45,6 +45,7 @@ The order confirmation response should include the order number, pickup time, it
 | POST | /api/owner/products/:productId/archive | Archive a product without removing order history. |
 | POST | /api/owner/products/:productId/restock | Add a positive quantity to current stock. |
 | POST | /api/owner/product-image-upload | Authorize a product image upload to Vercel Blob. |
+| GET | /api/owner/products | List active and archived products. |
 | GET | /api/owner/products/:productId | Read one product, including archived products. |
 | GET | /api/owner/orders/:orderId | Read order details and immutable item snapshots. |
 
