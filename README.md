@@ -2,6 +2,12 @@
 
 React + Vite frontend, Express API, MongoDB, and a Vercel deployment configuration. Product/design decisions and the canonical roadmap are indexed in [docs/README.md](docs/README.md).
 
+## BYTE internship task
+
+AVIP 2026 Full Stack Development, Task 3 — Local Store E-commerce Platform. The local folder name "Project 2" identifies the second project being worked on, not BYTE's task number. The public repository is [FSD_3_LocalStoreEcommercePlatform_byte](https://github.com/pzshaker/FSD_3_LocalStoreEcommercePlatform_byte).
+
+BYTE requires product listing/detail screens, product and cart APIs, a session-persisted cart, product image/price/description/stock display, validation and cart feedback, plus a README covering available APIs and sample data and a live demo or screenshots. Phase 1 is complete; these task features and submission evidence remain later roadmap work. See [the implemented API list](docs/backend-api.md#phase-1-implemented-endpoints) and [the implementation roadmap](docs/implementation-plan.md).
+
 ## Local setup
 
 Requires Node.js 22.12+ and MongoDB Atlas (or a local MongoDB instance). Atlas must allow your development machine's network access. Phase 2 checkout transactions require a replica set, which Atlas supplies.
