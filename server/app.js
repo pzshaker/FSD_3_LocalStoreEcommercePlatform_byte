@@ -201,7 +201,9 @@ app.post('/api/orders', customer, async (req, res) => {
         if (updated.modifiedCount !== 1) throw fail(409, 'INSUFFICIENT_STOCK', `${product.name} is no longer available in that quantity.`);
         snapshots.push({ productId: product._id, name: product.name, unitPrice: product.price, quantity: item.quantity });
       }
-      order = await Order.create([{ orderNumber: `SAMPLE-${Date.now().toString(36).toUpperCase()}-${randomInt(1000, 10000)}`, sessionHash: req.sessionHash, idempotencyKey: key, customerName: customerName.trim(), phone: phone.trim(), pickupAt: requestedAt, items: snapshots, total: snapshots.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0) }], { session }).then(([created]) => created);
+      const total = snapshots.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+      if (!Number.isSafeInteger(total)) throw fail(400, 'INVALID_TOTAL', 'The order total exceeds the supported limit.');
+      order = await Order.create([{ orderNumber: `SAMPLE-${Date.now().toString(36).toUpperCase()}-${randomInt(1000, 10000)}`, sessionHash: req.sessionHash, idempotencyKey: key, customerName: customerName.trim(), phone: phone.trim(), pickupAt: requestedAt, items: snapshots, total }], { session }).then(([created]) => created);
       await Cart.updateOne({ sessionHash: req.sessionHash }, { $set: { items: [] } }, { session });
     });
   } catch (error) {
@@ -236,7 +238,7 @@ function productInput(body, partial = false) {
   const value = {};
   for (const field of ['name', 'description', 'category', 'price', 'stock', 'imageUrl']) if (body?.[field] !== undefined) value[field] = body[field];
   if ((!partial && (!value.name || typeof value.name !== 'string' || !value.name.trim() || value.name.trim().length > 160)) || (value.name !== undefined && (typeof value.name !== 'string' || !value.name.trim() || value.name.trim().length > 160))) throw fail(400, 'INVALID_PRODUCT', 'Enter a product name up to 160 characters.');
-  if ((!partial && (typeof value.description !== 'string' || value.description.length > 2000)) || (value.description !== undefined && (typeof value.description !== 'string' || value.description.length > 2000))) throw fail(400, 'INVALID_PRODUCT', 'Enter a description up to 2,000 characters.');
+  if ((!partial && (typeof value.description !== 'string' || !value.description.trim() || value.description.length > 2000)) || (value.description !== undefined && (typeof value.description !== 'string' || !value.description.trim() || value.description.length > 2000))) throw fail(400, 'INVALID_PRODUCT', 'Enter a description up to 2,000 characters.');
   if ((!partial && !categories.includes(value.category)) || (value.category !== undefined && !categories.includes(value.category))) throw fail(400, 'INVALID_CATEGORY', 'Choose one of the available categories.');
   if ((!partial && (!Number.isSafeInteger(value.price) || value.price < 1)) || (value.price !== undefined && (!Number.isSafeInteger(value.price) || value.price < 1))) throw fail(400, 'INVALID_PRICE', 'Price must be a positive whole number in minor units.');
   if ((!partial && (!Number.isSafeInteger(value.stock) || value.stock < 0)) || (value.stock !== undefined && (!Number.isSafeInteger(value.stock) || value.stock < 0))) throw fail(400, 'INVALID_STOCK', 'Stock must be a nonnegative whole number.');

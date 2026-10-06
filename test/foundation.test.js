@@ -109,6 +109,7 @@ test('owner product management and order status enforce permissions and valid tr
   const created = await request('/owner/products', { method: 'POST', cookie, body: { name: 'Sample pastry', description: 'Sample content.', category: 'Pastries', price: 99, stock: 3 } });
   assert.equal(created.status, 201);
   const product = (await created.json()).product;
+  assert.equal((await request(`/owner/products/${product._id}`, { method: 'PATCH', cookie, body: { stock: 0 } })).status, 400);
   assert.equal((await request(`/owner/products/${product._id}/restock`, { method: 'POST', cookie, body: { quantity: 2 } })).status, 200);
   assert.equal((await Product.findById(product._id)).stock, 5);
   await Product.updateOne({ _id: product._id }, { $set: { stock: 3 } });
@@ -123,6 +124,7 @@ test('owner product management and order status enforce permissions and valid tr
   assert.equal((await request(`/owner/orders/${order._id}/status`, { method: 'PATCH', cookie, body: { status: 'Picked up' } })).status, 200);
   assert.equal((await request(`/owner/products/${product._id}/archive`, { method: 'POST', cookie })).status, 200);
   assert.equal((await Product.findById(product._id)).active, false);
+  assert.equal((await request('/cart/items', { method: 'POST', cookie: customerCookie, body: { productId: product._id, quantity: 1 } })).status, 409);
   await Cart.updateOne({ sessionHash: digest(customerCookie.split('=')[1]) }, { $set: { items: [{ productId: product._id, quantity: 1 }] } }, { upsert: true });
   assert.equal((await request(`/cart/items/${product._id}`, { method: 'DELETE', cookie: customerCookie })).status, 204);
 });
