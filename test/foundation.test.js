@@ -73,6 +73,14 @@ test('production cookies are Secure', async () => {
   try { assert.match((await request('/customer/session')).headers.get('set-cookie'), /Secure/); }
   finally { delete process.env.NODE_ENV; }
 });
+test('Vercel Blob completion requests get past browser Origin checks', async () => {
+  const existing = process.env.BLOB_READ_WRITE_TOKEN;
+  delete process.env.BLOB_READ_WRITE_TOKEN;
+  try {
+    assert.equal((await request('/owner/product-image-upload', { method: 'POST', requestOrigin: 'https://vercel.example', body: { type: 'blob.upload-completed' } })).status, 503);
+    assert.equal((await request('/owner/product-image-upload', { method: 'POST', requestOrigin: 'https://vercel.example', body: { type: 'blob.generate-client-token' } })).status, 403);
+  } finally { if (existing !== undefined) process.env.BLOB_READ_WRITE_TOKEN = existing; }
+});
 test('catalog filters, session cart, transactional checkout, idempotent retry, and cancellation restore stock once', async () => {
   const product = await Product.create({ name: 'Sample loaf', description: 'Sample bakery item', category: 'Bread', price: 125, stock: 2, sample: true });
   const catalog = await request('/products?category=Bread&search=loaf');

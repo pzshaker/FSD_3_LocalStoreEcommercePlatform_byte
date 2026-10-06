@@ -14,7 +14,8 @@ app.use(express.json({ limit: '16kb' }));
 app.use(cookieParser());
 app.use('/api', (req, res, next) => {
   res.set('Cache-Control', 'no-store');
-  if (!['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+  const blobCompletion = req.originalUrl.split('?')[0] === '/api/owner/product-image-upload' && req.body?.type === 'blob.upload-completed';
+  if (!blobCompletion && !['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
     const origin = process.env.APP_ORIGIN;
     if (!origin || req.get('origin') !== origin) return next(fail(403, 'ORIGIN_REJECTED', 'This request is not permitted.'));
   }
