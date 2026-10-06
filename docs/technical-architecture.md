@@ -56,6 +56,9 @@ Store the owner's email and a strong password hash. Do not store plaintext passw
 - Product archival hides it from the storefront while preserving order references.
 - Store prices as integer cents to avoid floating point rounding errors.
 - Use bakery-local time for pickup-slot validation and cancellation cutoffs.
+- Checkout/cancellation use MongoDB transactions; deployments need a replica set.
+- `BAKERY_TIMEZONE` can set the bakery timezone; the current default is the documented Africa/Cairo assumption. Tomorrow's additional cutoff is intentionally unset.
+- Product photos use owner-authorized Vercel Blob client uploads, limited to JPEG, PNG, or WebP up to 5 MiB.
 
 ## Open technical questions
 
@@ -63,5 +66,4 @@ Store the owner's email and a strong password hash. Do not store plaintext passw
 - Decide the cutoff rule for next-day orders; only the same-day one-hour cutoff was chosen.
 - Decide how long archived orders and expired cart records are retained.
 - Decide whether the owner needs stock correction/decrease controls in addition to adding restock quantities.
-- Confirm whether Vercel Blob upload should use a server-authorized upload flow.
 

@@ -1,21 +1,21 @@
 import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server-core';
+import { MongoMemoryReplSet } from 'mongodb-memory-server-core';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import app from '../server/app.js';
 import { connectDb } from '../server/db.js';
-import { Owner, Session, Product, LoginAttempt } from '../server/models.js';
-import { hashPassword, verifyPassword } from '../server/security.js';
+import { Owner, Session, Product, LoginAttempt, Cart, Order } from '../server/models.js';
+import { digest, hashPassword, verifyPassword } from '../server/security.js';
 let database, server, base;
 const origin = 'http://localhost:5173';
 const password = 'test-owner-password-123';
 before(async () => {
   const localBinary = resolve('node_modules/.cache/phase1-mongo/mongod.exe');
-  database = await MongoMemoryServer.create(existsSync(localBinary) ? { binary: { systemBinary: localBinary } } : {});
+  database = await MongoMemoryReplSet.create({ replSet: { count: 1 }, ...(existsSync(localBinary) ? { binary: { systemBinary: localBinary } } : {}) });
   process.env.MONGODB_URI = database.getUri(); process.env.MONGODB_DB = 'foundation_test'; process.env.APP_ORIGIN = origin;
-  await connectDb(); await Promise.all([Owner.init(), Session.init(), LoginAttempt.init()]);
+  await connectDb(); await Promise.all([Owner.init(), Session.init(), LoginAttempt.init(), Product.init(), Cart.init(), Order.init()]);
   await Owner.create({ email: 'owner@example.test', passwordHash: await hashPassword(password) });
   server = app.listen(0, '127.0.0.1');
   await new Promise(resolve => server.once('listening', resolve));
@@ -72,4 +72,68 @@ test('production cookies are Secure', async () => {
   process.env.NODE_ENV = 'production';
   try { assert.match((await request('/customer/session')).headers.get('set-cookie'), /Secure/); }
   finally { delete process.env.NODE_ENV; }
+});
+test('catalog filters, session cart, transactional checkout, idempotent retry, and cancellation restore stock once', async () => {
+  const product = await Product.create({ name: 'Sample loaf', description: 'Sample bakery item', category: 'Bread', price: 125, stock: 2, sample: true });
+  const catalog = await request('/products?category=Bread&search=loaf');
+  assert.equal((await catalog.json()).products.length, 1);
+  const session = await request('/customer/session');
+  const customerCookie = session.headers.get('set-cookie').split(';')[0];
+  assert.equal((await request('/cart/items', { method: 'POST', cookie: customerCookie, body: { productId: String(product._id), quantity: 2 } })).status, 200);
+  const cart = await request('/cart', { cookie: customerCookie });
+  assert.equal((await cart.json()).total, 250);
+  // Ask the API for tomorrow's date from its configured bakery timezone.
+  const tomorrowKey = new Intl.DateTimeFormat('en-CA', { timeZone: process.env.BAKERY_TIMEZONE || 'Africa/Cairo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(Date.now() + 24 * 60 * 60 * 1000));
+  const tomorrow = await (await request(`/pickup-slots?date=${tomorrowKey}`)).json();
+  assert.ok(tomorrow.slots.length > 0);
+  const input = { customerName: 'Sample Customer', phone: '+201234567890', pickupAt: tomorrow.slots[0].pickupAt, idempotencyKey: 'checkout-retry-00001' };
+  const placed = await request('/orders', { method: 'POST', cookie: customerCookie, body: input });
+  assert.equal(placed.status, 201);
+  const order = (await placed.json()).order;
+  assert.equal(order.total, 250); assert.equal(order.items[0].name, 'Sample loaf');
+  assert.equal((await Product.findById(product._id)).stock, 0);
+  const retry = await request('/orders', { method: 'POST', cookie: customerCookie, body: input });
+  assert.equal((await retry.json()).order.orderNumber, order.orderNumber);
+  assert.equal((await request(`/orders/${order.orderNumber}`, { cookie: customerCookie })).status, 200);
+  assert.equal((await request(`/orders/${order.orderNumber}`, { cookie: (await request('/customer/session')).headers.get('set-cookie')?.split(';')[0] })).status, 404);
+  await Order.updateOne({ _id: order._id }, { $set: { status: 'Ready' } });
+  assert.equal((await request(`/orders/${order.orderNumber}/cancel`, { method: 'POST', cookie: customerCookie })).status, 200);
+  assert.equal((await Product.findById(product._id)).stock, 2);
+  await request(`/orders/${order.orderNumber}/cancel`, { method: 'POST', cookie: customerCookie });
+  assert.equal((await Product.findById(product._id)).stock, 2);
+});
+test('owner product management and order status enforce permissions and valid transitions', async () => {
+  assert.equal((await request('/owner/products', { method: 'POST', body: {} })).status, 401);
+  const login = await request('/owner/session', { method: 'POST', body: { email: 'owner@example.test', password } });
+  const cookie = login.headers.get('set-cookie').split(';')[0];
+  const created = await request('/owner/products', { method: 'POST', cookie, body: { name: 'Sample pastry', description: 'Sample content.', category: 'Pastries', price: 99, stock: 3 } });
+  assert.equal(created.status, 201);
+  const product = (await created.json()).product;
+  assert.equal((await request(`/owner/products/${product._id}/restock`, { method: 'POST', cookie, body: { quantity: 2 } })).status, 200);
+  assert.equal((await Product.findById(product._id)).stock, 5);
+  await Product.updateOne({ _id: product._id }, { $set: { stock: 3 } });
+  const customerCookie = (await request('/customer/session')).headers.get('set-cookie').split(';')[0];
+  await request('/cart/items', { method: 'POST', cookie: customerCookie, body: { productId: product._id, quantity: 1 } });
+  const date = new Intl.DateTimeFormat('en-CA', { timeZone: process.env.BAKERY_TIMEZONE || 'Africa/Cairo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(Date.now() + 24 * 60 * 60 * 1000));
+  const slots = await (await request(`/pickup-slots?date=${date}`)).json();
+  const placed = await request('/orders', { method: 'POST', cookie: customerCookie, body: { customerName: 'Sample Customer', phone: '12345678901', pickupAt: slots.slots[0].pickupAt, idempotencyKey: 'owner-status-check-0001' } });
+  const order = (await placed.json()).order;
+  assert.equal((await request(`/owner/orders/${order._id}/status`, { method: 'PATCH', cookie, body: { status: 'Picked up' } })).status, 409);
+  assert.equal((await request(`/owner/orders/${order._id}/status`, { method: 'PATCH', cookie, body: { status: 'Ready' } })).status, 200);
+  assert.equal((await request(`/owner/orders/${order._id}/status`, { method: 'PATCH', cookie, body: { status: 'Picked up' } })).status, 200);
+  assert.equal((await request(`/owner/products/${product._id}/archive`, { method: 'POST', cookie })).status, 200);
+  assert.equal((await Product.findById(product._id)).active, false);
+  await Cart.updateOne({ sessionHash: digest(customerCookie.split('=')[1]) }, { $set: { items: [{ productId: product._id, quantity: 1 }] } }, { upsert: true });
+  assert.equal((await request(`/cart/items/${product._id}`, { method: 'DELETE', cookie: customerCookie })).status, 204);
+});
+test('concurrent checkout cannot oversell the last unit', async () => {
+  const product = await Product.create({ name: 'Sample final loaf', description: 'Sample content.', category: 'Bread', price: 100, stock: 1, sample: true });
+  const sessions = await Promise.all([request('/customer/session'), request('/customer/session')]);
+  const cookies = sessions.map(response => response.headers.get('set-cookie').split(';')[0]);
+  for (const cookie of cookies) assert.equal((await request('/cart/items', { method: 'POST', cookie, body: { productId: String(product._id), quantity: 1 } })).status, 200);
+  const date = new Intl.DateTimeFormat('en-CA', { timeZone: process.env.BAKERY_TIMEZONE || 'Africa/Cairo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(Date.now() + 24 * 60 * 60 * 1000));
+  const slots = await (await request(`/pickup-slots?date=${date}`)).json();
+  const outcomes = await Promise.all(cookies.map((cookie, index) => request('/orders', { method: 'POST', cookie, body: { customerName: 'Sample Customer', phone: '12345678901', pickupAt: slots.slots[0].pickupAt, idempotencyKey: `race-order-check-${index}-00001` } })));
+  assert.deepEqual(outcomes.map(response => response.status).sort(), [201, 409]);
+  assert.equal((await Product.findById(product._id)).stock, 0);
 });

@@ -2,7 +2,7 @@
 
 Build the complete bakery ordering app in five phases, backend first. Group related API, screen, state, and motion work together so each phase produces a working result. Use this document as the implementation checklist; keep detailed behavior in the linked source documents.
 
-**Current state:** Phase 1 application foundation is implemented: React/Vite, Express, MongoDB models/connection, private owner setup, secure sessions, validation/errors, and styled customer/owner route shells. Production build and seven isolated MongoDB/security checks pass. Phase 1 is complete. Real Atlas connectivity and dummy owner provisioning are verified, including sign-in, authenticated access, sign-out, and session revocation. Dummy owner credentials are stored in ignored `.env` for local development and must be replaced before launch. Desktop designs are prepared; mobile design and its dedicated review remain deferred.
+**Current state:** Phases 1 and 2 are complete. Phase 2 adds the catalog, session cart, pickup availability, transactional and idempotent checkout/cancellation, owner product/order APIs, and authorized Vercel Blob client-upload tokens. Ten isolated API/security/transaction checks and the production build pass; the browser smoke test verified checkout through cancellation against an isolated in-memory replica set. The UI implementation is in progress for Phase 3. Atlas connectivity and local owner provisioning were verified during Phase 1. Dummy owner credentials remain in ignored `.env` and must be replaced before production. Desktop is the current priority; mobile design/review remains deferred.
 
 ## Phase 1 — Foundation and secure access
 
@@ -16,13 +16,13 @@ Build the complete bakery ordering app in five phases, backend first. Group rela
 
 ## Phase 2 — Complete product and order APIs
 
-- [ ] Implement catalog listing/detail, category/search filters, browser-session cart operations, and available pickup slots.
-- [ ] Implement guest checkout with server validation, immutable order snapshots, atomic stock decrement, and idempotency for safe retries.
-- [ ] Implement session-authorized confirmation access and cancellation with the six-hour cutoff and stock restoration exactly once.
-- [ ] Implement owner product create/edit/archive, authorized photo uploads, and restock; preserve references from existing orders.
-- [ ] Implement owner order queue/detail, New → Ready → Picked up transitions, and recent/archived views after 30 days. Complete the API draft with the read endpoints needed by these screens.
+- [x] Implement catalog listing/detail, category/search filters, browser-session cart operations, and available pickup slots.
+- [x] Implement guest checkout with server validation, immutable order snapshots, atomic stock decrement, and idempotency for safe retries.
+- [x] Implement session-authorized confirmation access and cancellation with the six-hour cutoff and stock restoration exactly once.
+- [x] Implement owner product create/edit/archive, authorized photo uploads, and restock; preserve references from existing orders.
+- [x] Implement owner order queue/detail, New → Ready → Picked up transitions, and recent/archived views after 30 days. Complete the API draft with the read endpoints needed by these screens.
 
-**Done when:** sample products can be managed, an order can be placed and fulfilled, and eligible cancellation restores stock. Targeted checks cover concurrent checkout, duplicate submission, cancellation retries, authorization, and pickup cutoffs.
+**Done when:** sample products can be managed, an order can be placed and fulfilled, and eligible cancellation restores stock. Targeted checks cover concurrent checkout, duplicate submission, cancellation retries, authorization, and pickup cutoffs. **Verified:** all above flows have isolated replica-set API coverage, including a two-customer last-unit race, owner authorization/status transitions, same-session confirmation, duplicate checkout/cancellation, and stock restoration.
 
 **Resolve before locking ordering behavior:** confirm bakery timezone and the next-day cutoff. Keep unconfirmed brand/catalog details as placeholders. Do not invent an extra next-day cutoff. Archive older orders without deleting them while retention remains undecided.
 
@@ -77,5 +77,5 @@ Build the complete bakery ordering app in five phases, backend first. Group rela
 | [Selected direction](../design-variations/DESIGN.md) and [motion guide](../ANIMATIONS.md) | Visual styling and interaction motion. |
 | [Project instructions](../AGENTS.md) | Rules for future implementation work. |
 
-**Next implementation task:** Phase 2 — implement catalog, browser-session cart, and pickup-slot APIs, then transactional ordering and owner management. Setup commands are in the root `README.md`. Replace the dummy owner login before production launch.
+**Next implementation task:** Phase 3 — finish and review the customer desktop screens against the implemented API. Setup commands are in the root `README.md`. Replace the dummy owner login before production launch.
 
