@@ -2,7 +2,7 @@
 
 Build the complete bakery ordering app in five phases, backend first. Group related API, screen, state, and motion work together so each phase produces a working result. Use this document as the implementation checklist; keep detailed behavior in the linked source documents.
 
-**Current state:** Phases 1 and 2 are complete. Phase 2 adds the catalog, session cart, pickup availability, transactional and idempotent checkout/cancellation, owner product/order APIs, and authorized Vercel Blob client-upload tokens. Ten isolated API/security/transaction checks and the production build pass; the browser smoke test verified checkout through cancellation against an isolated in-memory replica set. The UI implementation is in progress for Phase 3. Atlas connectivity and local owner provisioning were verified during Phase 1. Dummy owner credentials remain in ignored `.env` and must be replaced before production. Desktop is the current priority; mobile design/review remains deferred.
+**Current state:** Phases 1–3 are complete. Phase 2 delivers catalog, session cart, pickup availability, transactional and idempotent checkout/cancellation, owner product/order APIs, and authorized Vercel Blob upload tokens. Phase 3 delivers the customer catalog-to-cancellation journey with error recovery, plus accessible customer and owner UI. All 11 isolated API/security/transaction checks and the production build pass; browser checks covered customer checkout/cancellation and the owner catalog/order flows against an isolated in-memory replica set. The owner UI was built into the shared app shell and receives its phase-specific final review in Phase 4. Atlas connectivity and local owner provisioning were verified during Phase 1. Dummy owner credentials remain in ignored `.env` and must be replaced before production. Desktop is the current priority; mobile design/review remains deferred.
 
 ## Phase 1 — Foundation and secure access
 
@@ -28,15 +28,15 @@ Build the complete bakery ordering app in five phases, backend first. Group rela
 
 ## Phase 3 — Complete customer experience
 
-- [ ] Build catalog and product detail with real APIs: category/search behavior, stock display, quantities, and add-to-cart feedback.
-- [ ] Build cart and guest checkout with pickup selection, server totals, stock-conflict recovery, and duplicate-submit protection.
-- [ ] Build confirmation and cancellation, including eligibility, completed cancellation, cutoff, and lost-session states.
-- [ ] Finish all customer loading, empty, validation, not-found, and service-error states.
-- [ ] Apply the customer motion guidance, keyboard interaction, visible focus, and reduced-motion support during screen implementation.
+- [x] Build catalog and product detail with real APIs: category/search behavior, stock display, quantities, and add-to-cart feedback.
+- [x] Build cart and guest checkout with pickup selection, server totals, stock-conflict recovery, and duplicate-submit protection.
+- [x] Build confirmation and cancellation, including eligibility, completed cancellation, cutoff, and lost-session states.
+- [x] Finish all customer loading, empty, validation, not-found, and service-error states.
+- [x] Apply the customer motion guidance, keyboard interaction, visible focus, and reduced-motion support during screen implementation.
 
 **Screens:** C1–C6; Stitch design patches 1–3.
 
-**Done when:** a customer can browse → add items → check out → view confirmation → cancel an eligible order using the desktop interface, with safe recovery from failures.
+**Done when:** a customer can browse → add items → check out → view confirmation → cancel an eligible order using the desktop interface, with safe recovery from failures. **Verified:** customer checkout, cancellation and stock restoration, retry/conflict handling, sample image fallbacks, category/search empty states, session cart persistence, and confirmation loss behavior were reviewed; 11 API checks and the production build pass. Browser checks exercised the full customer path and owner integration in the shared app.
 
 ## Phase 4 — Complete owner experience
 
@@ -77,5 +77,5 @@ Build the complete bakery ordering app in five phases, backend first. Group rela
 | [Selected direction](../design-variations/DESIGN.md) and [motion guide](../ANIMATIONS.md) | Visual styling and interaction motion. |
 | [Project instructions](../AGENTS.md) | Rules for future implementation work. |
 
-**Next implementation task:** Phase 3 — finish and review the customer desktop screens against the implemented API. Setup commands are in the root `README.md`. Replace the dummy owner login before production launch.
+**Next implementation task:** Phase 4 — final owner-flow review, fixes, and verification. Setup commands are in the root `README.md`. Replace the dummy owner login and configure production storage before launch.
 
