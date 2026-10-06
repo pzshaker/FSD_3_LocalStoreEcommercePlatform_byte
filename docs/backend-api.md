@@ -21,7 +21,7 @@ Phase 2 endpoints below are implemented. Errors use `{ "error": { "code": "STABL
 | GET | /api/products | List active products; optional category and search filters. |
 | GET | /api/products/:productId | Get one active product. |
 | GET | /api/pickup-slots | Return today's and tomorrow's date keys and timezone. |
-| GET | /api/pickup-slots?date=YYYY-MM-DD | Return open slots for today or tomorrow in `BAKERY_TIMEZONE` (defaults to the documented Africa/Cairo assumption). `date=today` and `date=tomorrow` are also accepted. Same-day slots close one hour before pickup; tomorrow has no additional cutoff. |
+| GET | /api/pickup-slots?date=YYYY-MM-DD | Return open slots for today or tomorrow in `BAKERY_TIMEZONE` (defaults to the documented Africa/Cairo assumption). `date=today` and `date=tomorrow` are also accepted. A same-day slot closes at the one-hour-before boundary; tomorrow has no additional cutoff. |
 | GET | /api/cart | Read the current browser-session cart. |
 | POST | /api/cart/items | Add a product and quantity to the cart. |
 | PATCH | /api/cart/items/:productId | Set the cart quantity for a product. |

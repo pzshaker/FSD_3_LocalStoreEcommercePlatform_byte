@@ -13,14 +13,14 @@ BYTE requires product listing/detail screens, product and cart APIs, a session-p
 Requires Node.js 22.12+ and MongoDB Atlas (or a local MongoDB instance). Atlas must allow your development machine's network access. Phase 2 checkout transactions require a replica set, which Atlas supplies.
 
 1. Run `npm install`.
-2. Copy `.env.example` to `.env`. Set `MONGODB_URI`, keeping it private. `MONGODB_DB` defaults to `bakery`.
+2. Copy `.env.example` to `.env`. Set `MONGODB_URI`, keeping it private. `MONGODB_DB` defaults to `bakery`. Add `BLOB_READ_WRITE_TOKEN` to enable owner photo uploads locally.
 3. Run `npm run db:check` to verify the connection.
 4. Set `OWNER_EMAIL` and a unique `OWNER_PASSWORD` of at least 12 characters in `.env`. Run `npm run owner:setup`, then remove the password from `.env`. Setup refuses to overwrite an existing owner.
 5. Run `npm run dev`. Open http://localhost:5173 or http://localhost:5173/owner/login.
 
 The API runs on port 3001; Vite proxies `/api` to it. If you change the API port, update the Vite proxy too. `APP_ORIGIN` must exactly match the frontend origin; state-changing requests require that Origin header. `BAKERY_TIMEZONE` optionally sets the pickup timezone and defaults to the documented Africa/Cairo assumption. Never prefix secrets with `VITE_`.
 
-`npm run seed:sample` optionally inserts four explicitly labeled sample products into an empty catalog. Sample prices are integer minor units with no confirmed currency. The seed never claims these are real products. Checkout uses MongoDB transactions, so the database must run as a replica set.
+`npm run seed:sample` optionally inserts four explicitly labeled sample products into an empty catalog. Sample photos are illustrative generated images, and sample prices are integer minor units with no confirmed currency. The seed never claims these are real products. Checkout uses MongoDB transactions, so the database must run as a replica set.
 
 ## Checks
 

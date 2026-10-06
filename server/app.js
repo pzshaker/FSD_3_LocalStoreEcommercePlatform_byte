@@ -133,7 +133,7 @@ app.get('/api/pickup-slots', (req, res) => {
   const key = req.query.date === 'today' ? today : req.query.date === 'tomorrow' ? tomorrow : req.query.date;
   if (![today, tomorrow].includes(key)) throw fail(400, 'INVALID_PICKUP_DATE', 'Choose today or tomorrow.');
   const slots = Array.from({ length: 8 }, (_, index) => zonedDateTime(key, 8, index * 30));
-  const available = key === today ? slots.filter(slot => slot.getTime() >= Date.now() + 60 * 60 * 1000) : slots;
+  const available = key === today ? slots.filter(slot => slot.getTime() > Date.now() + 60 * 60 * 1000) : slots;
   res.json({ date: key, timezone: timezone(), slots: available.map(pickupAt => ({ pickupAt: pickupAt.toISOString(), label: new Intl.DateTimeFormat('en', { timeZone: timezone(), hour: 'numeric', minute: '2-digit' }).format(pickupAt) })) });
 });
 app.get('/api/cart', customer, async (req, res) => {
@@ -182,7 +182,7 @@ app.post('/api/orders', customer, async (req, res) => {
     const today = dateKey(); const tomorrow = new Date(Date.parse(`${today}T00:00:00Z`) + 86_400_000).toISOString().slice(0, 10);
     if (![today, tomorrow].includes(day)) return [];
     const valid = Array.from({ length: 8 }, (_, index) => zonedDateTime(day, 8, index * 30));
-    return day === today ? valid.filter(slot => slot.getTime() >= Date.now() + 60 * 60 * 1000) : valid;
+    return day === today ? valid.filter(slot => slot.getTime() > Date.now() + 60 * 60 * 1000) : valid;
   })());
   if (!slots.some(slot => slot.getTime() === requestedAt.getTime())) throw fail(400, 'PICKUP_UNAVAILABLE', 'Choose an available pickup time.');
   const cart = await Cart.findOne({ sessionHash: req.sessionHash }).lean();
