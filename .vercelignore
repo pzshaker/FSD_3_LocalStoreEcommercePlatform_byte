@@ -1,9 +1,7 @@
-node_modules/
-dist/
-.env
-.env.*
-!.env.example
+.env*
 /mongodb-pass.txt
 .serena/
 .vercel/
 coverage/
+dist/
+node_modules/
