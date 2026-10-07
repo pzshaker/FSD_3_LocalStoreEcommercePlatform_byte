@@ -36,7 +36,7 @@ All routes are documented with request shapes and authorization rules in [docs/b
 
 `npm run seed:sample` creates one clearly labeled product in each fixed category: Bread, Pastries, Cakes, and Drinks. Each has a placeholder description, price of 100 sample minor units (currency unconfirmed), and stock of 10. Sample photos are illustrative generated category images; they are not verified product photography. The seed only runs against an empty catalog.
 
-**Public demo:** [Open the storefront](https://bakery-ordering-app.vercel.app/). Production uses the isolated `bakery_demo` database; Preview has separate environment variables configured. Four clearly labeled sample products are seeded until the bakery confirms real catalog details. One synthetic cancelled order remains from live flow verification; its stock was restored.
+**Public demo:** [Open the storefront](https://bakery-ordering-app.vercel.app/). Production uses the isolated `bakery_demo` database; Preview has separate environment variables configured. Four clearly labeled sample products are seeded until the bakery confirms real catalog details. Two synthetic cancelled orders remain from live flow verification; one was marked Ready before the guest cancelled it. Stock was restored for both.
 
 ### Quick demo walkthrough
 
