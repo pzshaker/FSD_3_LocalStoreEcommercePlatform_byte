@@ -27,7 +27,7 @@ A complete, public-facing ordering website for an artisan bakery. This is the fu
 - Same-day orders close one hour before the selected pickup slot.
 - There is no separate order or item capacity per slot.
 - Product stock is the availability limit.
-- Bakery-local timezone is assumed to be Africa/Cairo based on the project context; confirm if the bakery operates elsewhere.
+- Bakery-local timezone is Africa/Cairo (confirmed by the owner).
 
 ## Owner experience
 

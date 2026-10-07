@@ -21,7 +21,7 @@ Phase 2 endpoints below are implemented. Errors use `{ "error": { "code": "STABL
 | GET | /api/products | List active products; optional category and search filters. |
 | GET | /api/products/:productId | Get one active product. |
 | GET | /api/pickup-slots | Return today's and tomorrow's date keys and timezone. |
-| GET | /api/pickup-slots?date=YYYY-MM-DD | Return open slots for today or tomorrow in `BAKERY_TIMEZONE` (defaults to the documented Africa/Cairo assumption). `date=today` and `date=tomorrow` are also accepted. A same-day slot closes at the one-hour-before boundary; tomorrow has no additional cutoff. |
+| GET | /api/pickup-slots?date=YYYY-MM-DD | Return open slots for today or tomorrow in `BAKERY_TIMEZONE` (defaults to confirmed Africa/Cairo). `date=today` and `date=tomorrow` are also accepted. A same-day slot closes at the one-hour-before boundary; tomorrow has no additional cutoff. |
 | GET | /api/cart | Read the current browser-session cart. |
 | POST | /api/cart/items | Add a product and quantity to the cart. |
 | PATCH | /api/cart/items/:productId | Set the cart quantity for a product. |
@@ -55,7 +55,7 @@ Every owner route requires a valid owner session. Blob client-token generation r
 
 - Product list accepts optional `category` and `search`; search matches name and description. It returns `{ products }` with active products only. Owner product listing includes archived products.
 - Cart add accepts `{ "productId": "...", "quantity": 1 }`; PATCH quantity sets the new quantity and DELETE removes the line. The cart is session-bound and stock is checked again at checkout.
-- Pickup slots return `{ date, timezone, slots: [{ pickupAt, label }] }`. Today and tomorrow are accepted; tomorrow has no invented cutoff.
+- Pickup slots return `{ date, timezone, slots: [{ pickupAt, label }] }`. Today and tomorrow are accepted; Africa/Cairo is confirmed and tomorrow has no additional cutoff pending a decision.
 - Checkout accepts `{ customerName, phone, pickupAt, idempotencyKey }`; items and prices come from the server cart. The response returns `{ order, cancellationCutoff }`. Reusing a key in the same browser session returns its original order.
 - Cancellation is available only to the originating browser session, while status is New or Ready, and at or before the six-hour deadline. Repeated cancellation does not restore stock twice.
 - Owner product create accepts name, description, fixed category, integer minor-unit `price`, `stock`, and optional HTTPS `imageUrl`. Edit cannot change stock; restock adds a positive integer quantity.

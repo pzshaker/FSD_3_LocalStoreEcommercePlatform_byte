@@ -41,7 +41,7 @@ Use `design-variations/DESIGN.md` and `ANIMATIONS.md` for the selected Stitch di
 - Show clear loading, empty, success, validation, and service-error states.
 - Use keyboard-operable controls, visible focus, semantic headings, and accessible form labels.
 - Display prices in the bakery's local currency; currency selection/format is not yet specified.
-- Use bakery-local time for pickup dates and times. Africa/Cairo is the current assumption, pending confirmation.
+- Use bakery-local time for pickup dates and times. The owner confirmed Africa/Cairo.
 - Visual direction is selected as Stitch Direction 2, Contemporary Neighborhood Market; see [DESIGN.md](../design-variations/DESIGN.md) and [ANIMATIONS.md](../ANIMATIONS.md). Bakery name/logo, confirmed currency, address, contact details, and verified product facts remain undecided.
 
 ## Customer navigation
@@ -140,7 +140,7 @@ Behavior:
 - No customer account or email field.
 - For same-day pickup, a slot closes one hour before its start time.
 - There is no per-slot capacity limit.
-- Next-day cutoff has not been decided; display only slots the backend confirms as available.
+- The next-day cutoff remains undecided; until confirmed, the backend offers tomorrow slots without an extra cutoff.
 - Validate required fields and phone input before submission.
 - Recheck all product stock when submitting.
 - On stock conflict, keep the customer on checkout, identify affected products, refresh availability, and let them update the cart.
@@ -376,7 +376,7 @@ Owner sign-in → Products → Archive confirmation → Product archived.
 ## Decisions still needed
 
 - Bakery brand/name, address, phone, currency, logo, and verified catalog content.
-- Confirm bakery timezone.
+- Bakery timezone confirmed as Africa/Cairo.
 - Define next-day ordering cutoff.
 - Define password recovery for the owner.
 - Decide whether archived products can be restored.

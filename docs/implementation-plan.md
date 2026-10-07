@@ -24,7 +24,7 @@ Build the complete bakery ordering app in five phases, backend first. Group rela
 
 **Done when:** sample products can be managed, an order can be placed and fulfilled, and eligible cancellation restores stock. Targeted checks cover concurrent checkout, duplicate submission, cancellation retries, authorization, and pickup cutoffs. **Verified:** all above flows have isolated replica-set API coverage, including a two-customer last-unit race, owner authorization/status transitions, same-session confirmation, duplicate checkout/cancellation, and stock restoration.
 
-**Resolve before locking ordering behavior:** confirm bakery timezone and the next-day cutoff. Keep unconfirmed brand/catalog details as placeholders. Do not invent an extra next-day cutoff. Archive older orders without deleting them while retention remains undecided.
+**Ordering decisions:** Africa/Cairo timezone is confirmed. The next-day cutoff remains undecided and unenforced; do not invent one. Keep unconfirmed brand/catalog details as placeholders. Archive older orders without deleting them while retention remains undecided.
 
 ## Phase 3 — Complete customer experience
 
@@ -58,7 +58,7 @@ Build the complete bakery ordering app in five phases, backend first. Group rela
 - [ ] Configure production secrets, MongoDB, image storage, and Vercel deployment; verify the deployed ordering and owner flows.
 - [ ] Finish setup/API documentation and a short demo walkthrough; record any remaining decisions explicitly.
 
-**Remaining inputs:** configure a production MongoDB replica-set URI and isolated database, Vercel Blob token, exact deployment `APP_ORIGIN`, production owner credentials, and confirm the bakery timezone and next-day cutoff policy. Keep all unconfirmed catalog and identity details labeled as samples.
+**Remaining inputs:** configure a production MongoDB replica-set URI and isolated database, Vercel Blob token, exact deployment `APP_ORIGIN`, production owner credentials, and decide the next-day cutoff policy. Keep all unconfirmed catalog and identity details labeled as samples.
 
 **Done when:** the complete desktop app works on its public Vercel URL and the important ordering/security checks pass. Mobile remains a separate follow-up after this desktop milestone; the eventual responsive requirement still applies.
 
