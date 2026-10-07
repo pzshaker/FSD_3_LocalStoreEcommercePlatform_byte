@@ -35,3 +35,10 @@ At desktop widths, preserve the asymmetrical hero and generous margins. At table
 
 ## Quality bar
 The result should feel like a premium independent bakery’s real storefront: modern, memorable, food-forward, and immediately usable. Maintain strong text contrast and make the menu and cart the clearest actions.
+
+## Implemented desktop refinements — 7 October 2026
+- Catalog search and filters share a compact toolbar; the selected category is reflected in global navigation and result focus/announcements preserve context.
+- Featured listings keep image, product facts, stock, price and action in one composition. Product detail uses a grouped purchase panel and pickup reassurance.
+- Customer operational screens use aligned cart rows, fieldset-based checkout choices, a compact summary, and receipt-like order outcomes.
+- Owner screens reserve Fraunces for the storefront; operational headings use Outfit, products use inventory rows, and archive/restock routes use compact product-identity panels.
+- Existing labeled sample assets remain in use until approved product photography is supplied.

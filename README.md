@@ -53,6 +53,10 @@ Open [the owner login](https://bakery-ordering-app.vercel.app/owner/login):
 - Password: `IoHwRjpVK3P0pp7jxJPhAHOjqndGPmAa`
 
 These public demo credentials grant full owner access to the demo database. Anyone who can read this public repository can use them, view submitted demo orders, change sample products and order statuses, and upload images. Do not enter real customer or business data.
+
+### Desktop frontend status
+
+The local F1–F5 desktop improvement roadmap is complete. Run `npm run dev` and open `http://localhost:5173`. Customer browse, cart and checkout can be reviewed with labeled sample data; authenticated owner review requires the credentials configured for the current local database. Deployment and the dedicated mobile pass remain deferred.
 ## Checks
 
 - `npm test`: Node's built-in tests with an isolated ephemeral MongoDB server. The first run downloads a MongoDB binary; no Atlas credentials or live data are used.

@@ -56,3 +56,7 @@ For arrivals, use a calm deceleration such as `cubic-bezier(0.16, 1, 0.3, 1)`. A
 - Do keyboard and touch users get equivalent feedback?
 - Does the reduced-motion setting remove nonessential movement?
 - Does the animation remain smooth without moving surrounding layout?
+
+## Implemented desktop motion — 7 October 2026
+
+The desktop pass uses CSS only: the existing first-entry hero crop arrival, hover-capable product image zoom, tactile pressed controls, a short results opacity transition, and a single successful-confirmation mark entrance. Pending and success text remains the primary state signal. `prefers-reduced-motion` removes spatial and entrance effects while retaining readable state changes.

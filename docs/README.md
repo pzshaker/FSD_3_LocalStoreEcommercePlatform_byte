@@ -8,9 +8,10 @@ This folder records the agreed product decisions and the current technical direc
 2. [Screens](screens.md) — complete customer and owner screen inventory, behavior, and states.
 3. [Technical architecture](technical-architecture.md) — selected stack and data-flow decisions.
 4. [Backend API](backend-api.md) — implemented routes, request/response shapes, and backend rules.
-5. [Five-phase roadmap](implementation-plan.md) — implementation checklist, working outcomes, and launch steps; backend first, desktop first.
+5. [Implementation roadmap](implementation-plan.md) — active F1–F5 desktop frontend improvement checklist, acceptance criteria, and estimates.
 6. [Selected visual direction](../design-variations/DESIGN.md) — Stitch Direction 2, Contemporary Neighborhood Market.
 7. [Motion spec](../ANIMATIONS.md) — component-level motion, accessibility, and performance rules.
+8. [Desktop frontend audit](frontend-audit.md) — findings and reference research from 7 October 2026; track implementation in the roadmap above.
 
 ## Decision status
 
