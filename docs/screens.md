@@ -140,7 +140,7 @@ Behavior:
 - No customer account or email field.
 - For same-day pickup, a slot closes one hour before its start time.
 - There is no per-slot capacity limit.
-- The next-day cutoff remains undecided; until confirmed, the backend offers tomorrow slots without an extra cutoff.
+- There is no additional cutoff for next-day slots; display the full set of backend-confirmed slots.
 - Validate required fields and phone input before submission.
 - Recheck all product stock when submitting.
 - On stock conflict, keep the customer on checkout, identify affected products, refresh availability, and let them update the cart.
@@ -377,7 +377,7 @@ Owner sign-in → Products → Archive confirmation → Product archived.
 
 - Bakery brand/name, address, phone, currency, logo, and verified catalog content.
 - Bakery timezone confirmed as Africa/Cairo.
-- Define next-day ordering cutoff.
+- No additional next-day ordering cutoff.
 - Define password recovery for the owner.
 - Decide whether archived products can be restored.
 - Decide owner product-list search/filter behavior.

@@ -93,7 +93,7 @@ test('catalog filters, session cart, transactional checkout, idempotent retry, a
   // Ask the API for tomorrow's date from its configured bakery timezone.
   const tomorrowKey = new Intl.DateTimeFormat('en-CA', { timeZone: process.env.BAKERY_TIMEZONE || 'Africa/Cairo', year: 'numeric', month: '2-digit', day: '2-digit' }).format(new Date(Date.now() + 24 * 60 * 60 * 1000));
   const tomorrow = await (await request(`/pickup-slots?date=${tomorrowKey}`)).json();
-  assert.ok(tomorrow.slots.length > 0);
+  assert.equal(tomorrow.slots.length, 8); // No next-day cutoff: every 30-minute slot remains available.
   const input = { customerName: 'Sample Customer', phone: '+201234567890', pickupAt: tomorrow.slots[0].pickupAt, idempotencyKey: 'checkout-retry-00001' };
   const placed = await request('/orders', { method: 'POST', cookie: customerCookie, body: input });
   assert.equal(placed.status, 201);

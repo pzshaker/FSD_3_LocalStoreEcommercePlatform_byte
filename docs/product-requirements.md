@@ -25,6 +25,7 @@ A complete, public-facing ordering website for an artisan bakery. This is the fu
 - Pickup slots are 30 minutes long: 8:00, 8:30, 9:00, and so on through 11:30 a.m.
 - Customers may order for today or tomorrow.
 - Same-day orders close one hour before the selected pickup slot.
+- There is no additional cutoff for next-day orders.
 - There is no separate order or item capacity per slot.
 - Product stock is the availability limit.
 - Bakery-local timezone is Africa/Cairo (confirmed by the owner).

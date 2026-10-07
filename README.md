@@ -47,7 +47,7 @@ All routes are documented with request shapes and authorization rules in [docs/b
 
 Phases 1–2 supply models, database connection, private owner provisioning, secure access, session cart, catalog and order APIs, transactional checkout/cancellation, and owner product/order APIs. Sample catalog records remain clearly labeled until the bakery confirms its details.
 
-Owner sessions expire after eight hours and are revocable. Customer cookies are browser-session cookies without a separate ordering-session time limit. Browsers with session restoration can preserve session cookies across restarts. Server customer identity/cart cleanup and confirmation recovery remain product decisions. Sign-in allows five attempts per normalized email in a 15-minute window using shared MongoDB counters; deployment-level abuse protection can complement it. Tomorrow has no additional cutoff until the owner chooses one.
+Owner sessions expire after eight hours and are revocable. Customer cookies are browser-session cookies without a separate ordering-session time limit. Browsers with session restoration can preserve session cookies across restarts. Server customer identity/cart cleanup and confirmation recovery remain product decisions. Sign-in allows five attempts per normalized email in a 15-minute window using shared MongoDB counters; deployment-level abuse protection can complement it. The owner confirmed there is no additional next-day pickup cutoff.
 
 ## Vercel
 

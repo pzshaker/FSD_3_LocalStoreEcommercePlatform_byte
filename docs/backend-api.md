@@ -55,7 +55,7 @@ Every owner route requires a valid owner session. Blob client-token generation r
 
 - Product list accepts optional `category` and `search`; search matches name and description. It returns `{ products }` with active products only. Owner product listing includes archived products.
 - Cart add accepts `{ "productId": "...", "quantity": 1 }`; PATCH quantity sets the new quantity and DELETE removes the line. The cart is session-bound and stock is checked again at checkout.
-- Pickup slots return `{ date, timezone, slots: [{ pickupAt, label }] }`. Today and tomorrow are accepted; Africa/Cairo is confirmed and tomorrow has no additional cutoff pending a decision.
+- Pickup slots return `{ date, timezone, slots: [{ pickupAt, label }] }`. Today and tomorrow are accepted; Africa/Cairo is confirmed and tomorrow has no additional cutoff.
 - Checkout accepts `{ customerName, phone, pickupAt, idempotencyKey }`; items and prices come from the server cart. The response returns `{ order, cancellationCutoff }`. Reusing a key in the same browser session returns its original order.
 - Cancellation is available only to the originating browser session, while status is New or Ready, and at or before the six-hour deadline. Repeated cancellation does not restore stock twice.
 - Owner product create accepts name, description, fixed category, integer minor-unit `price`, `stock`, and optional HTTPS `imageUrl`. Edit cannot change stock; restock adds a positive integer quantity.

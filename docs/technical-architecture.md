@@ -57,12 +57,11 @@ Store the owner's email and a strong password hash. Do not store plaintext passw
 - Store prices as integer cents to avoid floating point rounding errors.
 - Use bakery-local time for pickup-slot validation and cancellation cutoffs.
 - Checkout/cancellation use MongoDB transactions; deployments need a replica set.
-- `BAKERY_TIMEZONE` can set the bakery timezone; Africa/Cairo is confirmed and is the default. Tomorrow's additional cutoff remains undecided and is not enforced.
+- `BAKERY_TIMEZONE` can set the bakery timezone; Africa/Cairo is confirmed and is the default. There is no additional cutoff for tomorrow's orders.
 - Product photos use owner-authorized Vercel Blob client uploads, limited to JPEG, PNG, or WebP up to 5 MiB.
 
 ## Open technical questions
 
-- Decide the cutoff rule for next-day orders; only the same-day one-hour cutoff was chosen.
 - Decide how long archived orders and expired cart records are retained.
 - Decide whether the owner needs stock correction/decrease controls in addition to adding restock quantities.
 
